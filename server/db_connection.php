@@ -73,18 +73,64 @@ class DB {
 
 		//Fill the themes table with some themes
 		$mysqli->query("INSERT INTO themes (theme_name, theme_description, theme_layout, theme_path)
-							VALUES('default', 'The default theme for the cms. A simple, yet elegant theme with focus on the content.', 'header, 2-column', 'default'),
-								  ('simple', 'This theme consists only of one column and a top navigation.', 'header, 1-column', 'simple');");
+							VALUES('default', 'The default theme for the cms. A simple, yet elegant theme with focus on the content.', 'head;top-nav;column-1;column-2', 'default'),
+								  ('simple', 'This theme consists only of one column and a top navigation.', 'head;top-nav;column-1', 'simple');");
 		if ($mysqli->connect_error) {
 			$response = array("success" => false, "msg" => array("errno" => $mysqli->connect_errno, "error" => $mysqli->connect_error));
 			$mysqli->close();
 			return json_encode($response);
 		}
 
+		//Settings for the page
+		$mysqli->query("CREATE TABLE settings (
+							id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+							layout INT)
+							ENGINE = InnoDB,
+							CHARACTER SET = utf8,
+							COLLATE = utf8_general_ci;");
+		if ($mysqli->connect_error) {
+			$response = array("success" => false, "msg" => array("errno" => $mysqli->connect_errno, "error" => $mysqli->connect_error));
+			$mysqli->close();
+			return json_encode($response);
+		}
+
+		//Content (only text) of the page is stored in this table
 		$mysqli->query("CREATE TABLE content (
 							id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 							data TEXT,
 							published TINYINT(1))
+							ENGINE = InnoDB,
+							CHARACTER SET = utf8,
+							COLLATE = utf8_general_ci;");
+		if ($mysqli->connect_error) {
+			$response = array("success" => false, "msg" => array("errno" => $mysqli->connect_errno, "error" => $mysqli->connect_error));
+			$mysqli->close();
+			return json_encode($response);
+		}
+
+		//Links of the page are stored here
+		$mysqli->query("CREATE TABLE links (
+							id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+							name VARCHAR(255),
+							type ENUM('external', 'internal', 'file'),
+							description VARCHAR(255),
+							ref VARCHAR(255))
+							ENGINE = InnoDB,
+							CHARACTER SET = utf8,
+							COLLATE = utf8_general_ci;");
+		if ($mysqli->connect_error) {
+			$response = array("success" => false, "msg" => array("errno" => $mysqli->connect_errno, "error" => $mysqli->connect_error));
+			$mysqli->close();
+			return json_encode($response);
+		}
+
+		//Layout. Which content or link is on which position. weight is also added here.
+		$mysqli->query("CREATE TABLE layout (
+							id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+							position VARCHAR(255),
+							type ENUM('links', 'content'),
+							weight INT(4),
+							data_id INT)
 							ENGINE = InnoDB,
 							CHARACTER SET = utf8,
 							COLLATE = utf8_general_ci;");
