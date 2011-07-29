@@ -32,6 +32,16 @@ if (isset($_POST["action"])) {
 				}
 			}
 			break;
+		case "insert":
+			if (!isset($_POST["table"])) {
+				$response_value = json_encode(array("success" => false, "msg" => array("error" => "No table for insert statement provided", "errno" => "")));
+			} else {
+				if (!isset($_POST["data"])) {
+					$response_value = json_encode(array("success" => false, "msg" => array("error" => "No data to insert provided", "errno" => "")));
+				} else {
+					$response_value = $db->insert($_POST["table"], $_POST["data"]);
+				}
+			}
 	}
 
 	echo $response_value;

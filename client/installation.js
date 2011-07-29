@@ -202,5 +202,16 @@ Installation.prototype = {
 		});
 	},
 
-	selectTheme: function() {}
+	selectTheme: function(id) {
+		var self = this;
+
+		jQuery.ajax({
+			url: "server/ajax.php",
+			type: "POST",
+			data: "action=insert&table=settings&data={\"layout\":" + id + ";}",
+			success: function(data, status) {
+				console.debug(data);
+			}
+		})
+	}
 }

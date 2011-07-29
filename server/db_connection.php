@@ -197,4 +197,36 @@ class DB {
 
 		return json_encode($response);
 	}
+
+	public function insert($table, $data) {
+		$assoc_data = json_decode($data, true);
+		$data_keys = array_keys($assoc_data);
+
+		$db_info_path = $_SERVER["DOCUMENT_ROOT"] . "/cms/libs/db_info.php";
+		require($db_info_path);
+
+		$mysqli = new mysqli($db_server, $db_username, $db_password, $db_database);
+
+		$tbl_data = "";
+		$tbl_values = "";
+		for ($i = 0; $i < count($data_keys); $i++) {
+			$tbl_data .= $data_keys[$i] . ", ";
+			$tbl_values .= "'" . $assoc_data[$data_keys[$i]] . "', ";
+		}
+		$tbl_data .= "" . $data_keys[count($data_keys)];
+		$tbl_values .= "'" . $assoc_data[$data_keys[count($data_keys)]] . "'";
+
+		$query = "INSERT INTO " . $table . " (" . $tbl_data . ") VALUES (" . $tbl_values . ");";
+		$mysqli->query($query);
+		if ($mysqli->connect_error) {
+			$response = array("success" => false, "msg" => array("errno" => $mysqli->connect_errno, "error" => $mysqli->connect_error));
+		} else {
+			$response = array("success" => true);
+		}
+
+		$result->free();
+		$mysqli->close();
+
+		return json_encode($response);
+	}
 }
