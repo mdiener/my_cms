@@ -202,5 +202,5 @@ Installation.prototype = {
 		});
 	},
 
-	selectTheme
+	selectTheme: function() {}
 }
