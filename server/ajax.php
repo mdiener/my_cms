@@ -42,6 +42,7 @@ if (isset($_POST["action"])) {
 					$response_value = $db->insert($_POST["table"], $_POST["data"]);
 				}
 			}
+			break;
 	}
 
 	echo $response_value;

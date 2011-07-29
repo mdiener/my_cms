@@ -192,7 +192,7 @@ Installation.prototype = {
 						}
 
 						self.nextBtn.click(function() {
-							self.selectTheme(jQuery(this).val());
+							self.selectTheme(jQuery(selectThemeCB).val());
 						});
 					} else {
 						jQuery(".theme-description").html("<p>Please select a valid theme.</p>");
@@ -208,7 +208,7 @@ Installation.prototype = {
 		jQuery.ajax({
 			url: "server/ajax.php",
 			type: "POST",
-			data: "action=insert&table=settings&data={\"layout\":" + id + ";}",
+			data: "action=insert&table=settings&data={\"layout\":" + id + "}",
 			success: function(data, status) {
 				console.debug(data);
 			}
