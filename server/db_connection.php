@@ -15,7 +15,31 @@ class DB {
 	private function __clone() {}
 
 	public function getState() {
-		return false;
+		$db_info_path = $_SERVER["DOCUMENT_ROOT"] . "/cms/libs/db_info.php";
+		require($db_info_path);
+
+		$mysqli = new mysqli($db_server, $db_username, $db_password, $db_database);
+		if ($mysqli->connect_error) {
+			$response = false;
+		} else {
+			$result = $mysqli->query("SELECT * FROM settings WHERE id=1");
+			if ($result) {
+				$data = $result->fetch_assoc();
+
+				if ($data["enabled"] == 1) {
+					$response = true;
+				} else {
+					$response = false;
+				}
+				$result->free();
+			} else {
+				$response = false;
+			}
+		}
+
+		$mysqli->close();
+
+		return $response;
 	}
 
 	public function checkCredentials() {
@@ -84,7 +108,8 @@ class DB {
 		//Settings for the page
 		$mysqli->query("CREATE TABLE settings (
 							id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-							layout INT)
+							layout INT,
+							enabled BOOLEAN)
 							ENGINE = InnoDB,
 							CHARACTER SET = utf8,
 							COLLATE = utf8_general_ci;");

@@ -173,7 +173,6 @@ Installation.prototype = {
 				jQuery("<option value=\"0\">-----------------</option>").appendTo(selectThemeCB);
 
 				var response = jQuery.parseJSON(data);
-				console.debug(response);
 				if (response.success) {
 					for (var i = 0; i < response.data.length; i++) {
 						opt = jQuery("<option />", {
@@ -208,10 +207,34 @@ Installation.prototype = {
 		jQuery.ajax({
 			url: "server/ajax.php",
 			type: "POST",
-			data: "action=insert&table=settings&data={\"layout\":" + id + "}",
+			data: "action=insert&table=settings&data={\"layout\":" + id + ", \"enabled\":true}",
 			success: function(data, status) {
-				console.debug(data);
+				var response = jQuery.parseJSON(data);
+				if(response.success) {
+					jQuery(".install-error-msg").empty();
+					self.finishInstallation();
+				} else {
+					console.error(response);
+				}
 			}
-		})
+		});
+	},
+
+	finishInstallation: function() {
+		var self = this;
+		this.nextBtn.remove();
+
+		jQuery(".title").html("Finish installation");
+		jQuery(".install-content").html("<p>Your site has been set up. To finish the installation click on finish. You will be redirected to your newly created page.</p>");
+
+		var finishBtn = jQuery("<input />", {
+			"class": "finish-installation",
+			type: "button",
+			value: "Finish"
+		}).appendTo(".button-lane");
+
+		finishBtn.click(function() {
+			window.location.reload();
+		});
 	}
 }
