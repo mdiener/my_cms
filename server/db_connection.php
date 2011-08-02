@@ -199,22 +199,24 @@ class DB {
 	}
 
 	public function insert($table, $data) {
-		$assoc_data = json_decode($data, true);
-		$data_keys = array_keys($assoc_data);
-
 		$db_info_path = $_SERVER["DOCUMENT_ROOT"] . "/cms/libs/db_info.php";
 		require($db_info_path);
+
+		$assoc_data = json_decode($data, true);
+		$data_keys = array_keys($assoc_data);
 
 		$mysqli = new mysqli($db_server, $db_username, $db_password, $db_database);
 
 		$tbl_data = "";
 		$tbl_values = "";
-		for ($i = 0; $i < count($data_keys); $i++) {
-			$tbl_data .= $data_keys[$i] . ", ";
-			$tbl_values .= "'" . $assoc_data[$data_keys[$i]] . "', ";
+		if (count($data_keys) !== 1) {
+			for ($i = 0; $i < count($data_keys) - 1; $i++) {
+				$tbl_data .= $data_keys[$i] . ", ";
+				$tbl_values .= "'" . $assoc_data[$data_keys[$i]] . "', ";
+			}
 		}
-		$tbl_data .= "" . $data_keys[count($data_keys)];
-		$tbl_values .= "'" . $assoc_data[$data_keys[count($data_keys)]] . "'";
+		$tbl_data .= "" . $data_keys[count($data_keys) - 1];
+		$tbl_values .= "'" . $assoc_data[$data_keys[count($data_keys) - 1]] . "'";
 
 		$query = "INSERT INTO " . $table . " (" . $tbl_data . ") VALUES (" . $tbl_values . ");";
 		$mysqli->query($query);
@@ -224,7 +226,6 @@ class DB {
 			$response = array("success" => true);
 		}
 
-		$result->free();
 		$mysqli->close();
 
 		return json_encode($response);
