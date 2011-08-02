@@ -1,5 +1,5 @@
 <?php
-class Install {
+class Website {
 	private static $instance = null;
 	private $website_script = "<script type=\"text/javascript\" src=\"client/website.js\"></script>";
 	private $jquery_script = "<script type=\"text/javascript\" src=\"libs/jquery_all.js\"></script>";
@@ -19,7 +19,7 @@ class Install {
 	private function __construct() {}
 	private function __clone() {}
 
-	public function startInstallation() {
+	public function build() {
 		$site = "<!DOCTYPE HTML><html><head>" . $this->title . $this->jquery_script . $this->less_script . $this->website_script . $this->css . "</head><body>" . $this->content . "</body></html>";
 		echo $site;
 	}

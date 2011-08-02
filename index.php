@@ -8,4 +8,6 @@ if (!($db->getState())) {
 	$install->startInstallation();
 } else {
 	require_once('server/website.php');
+	$website = Website::getInstance();
+	$website->build();
 }
