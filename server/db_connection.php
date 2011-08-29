@@ -97,8 +97,8 @@ class DB {
 
 		//Fill the themes table with some themes
 		$mysqli->query("INSERT INTO themes (theme_name, theme_description, theme_layout, theme_path)
-							VALUES('default', 'The default theme for the cms. A simple, yet elegant theme with focus on the content.', 'head;top-nav;column-1;column-2', 'default'),
-								  ('simple', 'This theme consists only of one column and a top navigation.', 'head;top-nav;column-1', 'simple');");
+							VALUES('default', 'The default theme for the cms. A simple, yet elegant theme with focus on the content.', 'head;top-nav;column-1', 'default'),
+								  ('simple', 'This theme consists of two columns. Left is a navigation, right the content. There is a header on top.', 'head;side-nav;column-2', 'simple');");
 		if ($mysqli->connect_error) {
 			$response = array("success" => false, "msg" => array("errno" => $mysqli->connect_errno, "error" => $mysqli->connect_error));
 			$mysqli->close();

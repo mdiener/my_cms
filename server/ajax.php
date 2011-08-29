@@ -21,6 +21,18 @@ if (isset($_POST["action"])) {
 				$response_value = $db->createAdminUser($_POST["username"], $_POST["password"], $_POST["email"]);
 			}
 			break;
+		case "getPage":
+			$page = $_SERVER["HTTP_REFERER"];
+			$page = strstr($page, "?");
+			$page = substr($page, 1, strlen($page));
+			$page = split("/", $page);
+
+			if ($page[0] === "") {
+				$page = array("home");
+			}
+
+			$response_value = json_encode($page);
+			break;
 		case "select":
 			if (!isset($_POST["table"])) {
 				$response_value = json_encode(array("success" => false, "msg" => array("error" => "No table for select statement provided", "errno" => "")));

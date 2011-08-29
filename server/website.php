@@ -6,7 +6,8 @@ class Website {
 	private $less_script = "<script type=\"text/javascript\" src=\"libs/less-1.1.3.min.js\"></script>";
 	private $css = "<link rel=\"stylesheet/less\" type=\"text/css\" href=\"styles.less\">";
 	private $title = "<title>NO TITLE SET</title>";
-	private $content = "<div class=\"wrapper\"><div class=\"main\"></div></div>";
+	private $content = "<div class=\"wrapper\"></div>";
+	private $page = array();
 
 	public static function getInstance() {
 		if(!isset(self::$instance)) {
@@ -20,6 +21,8 @@ class Website {
 	private function __clone() {}
 
 	public function build() {
+		//$this->content = $this->getContent();
+
 		$site = "<!DOCTYPE HTML><html><head>" . $this->title . $this->jquery_script . $this->less_script . $this->website_script . $this->css . "</head><body>" . $this->content . "</body></html>";
 		echo $site;
 	}

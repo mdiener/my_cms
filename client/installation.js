@@ -9,35 +9,35 @@ var Installation = function() {
 
 Installation.prototype = {
 	setup: function() {
-		var self = this;
+		var me = this;
 
 		jQuery(".title").html("Welcome!");
 		jQuery(".install-content").html("<p>Please follow the steps through to set up your website.</p><p>Before you can begin setting up your website you need to create a database in your MySQL. If you do not know how, contact your hosting provider.</p>");
-		this.nextBtn = jQuery("<input />", {
+		me.nextBtn = jQuery("<input />", {
 			type: "button",
 			value: "Next",
 			"class": "install-next-step"
 		}).appendTo(".button-lane");
 
-		this.nextBtn.click(function() {
-			self.beginInstallation();
+		me.nextBtn.click(function() {
+			me.beginInstallation();
 		});
 	},
 
 	beginInstallation: function() {
-		var self = this;
+		var me = this;
 
 		jQuery(".title").html("Step 1 - Set DB Credentials");
 		jQuery(".install-content").html("<p>For this step you need to edit the file located in your CMS folder under: [path_to_your_cms]/libs/db_info.php.</p><p>In this file you need to write the credentials for your database connection. A password and a username is required.</p><p>Click next if you have finished editing the file.</p>");
 
-		this.nextBtn.unbind("click");
-		this.nextBtn.click(function() {
-			self.checkDBCredentials();
+		me.nextBtn.unbind("click");
+		me.nextBtn.click(function() {
+			me.checkDBCredentials();
 		});
 	},
 
 	checkDBCredentials: function() {
-		var self = this;
+		var me = this;
 
 		jQuery.ajax({
 			url: "server/ajax.php",
@@ -47,7 +47,7 @@ Installation.prototype = {
 				var response = jQuery.parseJSON(data);
 				if (response.success) {
 					jQuery(".install-error-msg").empty();
-					self.setupDB();
+					me.setupDB();
 				} else {
 					jQuery(".install-error-msg").html("<p>Please correct the values in the db_info file.</p>");
 				}
@@ -56,20 +56,20 @@ Installation.prototype = {
 	},
 
 	setupDB: function() {
-		var self = this;
+		var me = this;
 
 		jQuery.ajax({
 			url: "server/ajax.php",
 			type: "POST",
 			data: "action=setup_db",
 			success: function(data, status) {
-				self.createAdminUserInterface();
+				me.createAdminUserInterface();
 			}
 		});
 	},
 
 	createAdminUserInterface: function() {
-		var self = this;
+		var me = this;
 
 		jQuery(".title").html("Step 2 - Set administrator name and password")
 		jQuery(".install-content").html("<p>You need to create an admin user, with which you will be able to administer your site.</p><p>Please provide a username and a password.</p>");
@@ -107,8 +107,8 @@ Installation.prototype = {
 			name: "email"
 		}).appendTo(".input-email");
 
-		this.nextBtn.unbind("click");
-		this.nextBtn.click(function() {
+		me.nextBtn.unbind("click");
+		me.nextBtn.click(function() {
 			if (inputUN.val() === "") {
 				jQuery(".install-error-msg").html("<p>Please specify a valid username and/or password</p>");
 				return;
@@ -122,12 +122,12 @@ Installation.prototype = {
 				return;
 			}
 
-			self.createAdminUser(inputUN.val(), inputPW.val(), inputEM.val());
+			me.createAdminUser(inputUN.val(), inputPW.val(), inputEM.val());
 		});
 	},
 
 	createAdminUser: function(username, password, email) {
-		var self = this;
+		var me = this;
 
 		jQuery.ajax({
 			url: "server/ajax.php",
@@ -137,7 +137,7 @@ Installation.prototype = {
 				var response = jQuery.parseJSON(data);
 				if (response.success) {
 					jQuery(".install-error-msg").empty();
-					self.selectThemeInterface();
+					me.selectThemeInterface();
 				} else {
 					jQuery(".install-error-msg").html("<p>The admin user could not be created. Please correct the fields and click next again.</p>");
 				}
@@ -146,9 +146,9 @@ Installation.prototype = {
 	},
 
 	selectThemeInterface: function() {
-		var self = this;
+		var me = this;
 
-		this.nextBtn.unbind("click")
+		me.nextBtn.unbind("click")
 
 		jQuery(".title").html("Step 3 - Select the theme")
 		jQuery(".install-content").html("<p>Select the theme you want for your site. You can change this afterwards, but it will pose a bit of work to arrange your content again.</p>");
@@ -190,8 +190,8 @@ Installation.prototype = {
 							}
 						}
 
-						self.nextBtn.click(function() {
-							self.selectTheme(jQuery(selectThemeCB).val());
+						me.nextBtn.click(function() {
+							me.selectTheme(jQuery(selectThemeCB).val());
 						});
 					} else {
 						jQuery(".theme-description").html("<p>Please select a valid theme.</p>");
@@ -202,7 +202,7 @@ Installation.prototype = {
 	},
 
 	selectTheme: function(id) {
-		var self = this;
+		var me = this;
 
 		jQuery.ajax({
 			url: "server/ajax.php",
@@ -212,7 +212,7 @@ Installation.prototype = {
 				var response = jQuery.parseJSON(data);
 				if(response.success) {
 					jQuery(".install-error-msg").empty();
-					self.finishInstallation();
+					me.finishInstallation();
 				} else {
 					console.error(response);
 				}
@@ -221,8 +221,8 @@ Installation.prototype = {
 	},
 
 	finishInstallation: function() {
-		var self = this;
-		this.nextBtn.remove();
+		var me = this;
+		me.nextBtn.remove();
 
 		jQuery(".title").html("Finish installation");
 		jQuery(".install-content").html("<p>Your site has been set up. To finish the installation click on finish. You will be redirected to your newly created page.</p>");
